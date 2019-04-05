@@ -2,7 +2,7 @@
 
 var AnnotationSurveyWindow
 
-var AnnotationSurveyTag = 'AnnotationSurveyCredCo'
+var AnnotationSurveyTag = 'AnnotationSurveyMediaLion'
 
 // when there's a selection, move the activator button to it
 document.addEventListener('mouseup', e => {
