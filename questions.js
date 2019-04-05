@@ -1,0 +1,292 @@
+const questions = {
+  'Q01': {
+    'type': 'radio',
+    'title': 'Overall Credibility',
+    'question': 'Rate your impression of the credibility of this article',
+    'choices': [
+      '1.01.01:Very low credibility',
+      '1.01.02:Somewhat low credibility',
+      '1.01.03:Medium credibility',
+      '1.01.04:Somewhat high credibility',
+      '1.01.05:High credibility',
+    ],
+    'anchored': false,
+  },
+  'Q02': {
+    'type': 'radio',
+    'title': 'Title Representativeness',
+    'question': 'Does the title of the article accurately reflect the content of the article?',
+    'prompt': 'Please select the title',
+    'choices': [
+      '1.02.01:Completely Unrepresentative',
+      '1.02.02:Somewhat Unrepresentative',
+      '1.02.03:Somewhat Representative',
+      '1.02.04:Completely Representative',
+    ],
+    'anchored': true,
+    'newSelectionRequired': true,
+  },
+  'Q03': {
+    'type': 'checkbox',
+    'title': 'Title Representativeness',
+    'question': 'How is the title unrepresentative? (select all that apply)',
+    'requires': {
+      'target': 'Q02',
+      'oneOf': ['1.02.01', '1.02.02'],
+    },
+    'choices': [
+      '1.03.01:Title is on a different topic than the body',
+      '1.03.02:Title emphasizes different information than the body',
+      '1.03.03:Title carries little information about the body',
+      '1.03.04:Title takes a different stance than the body',
+      '1.03.05:Title overstates claims or conclusions in the body',
+      '1.03.06:Title understates claims or conclusions in the body',
+      '1.03.07:Other'
+    ],
+    'anchored': true,
+  },
+  'Q03_01': {
+    'type': 'textarea',
+    'title': 'Title Representativeness',
+    'question': 'Please describe other ways in which the title is not representative',
+    'anchored': true,
+    'requires': {
+      'target': 'Q03',
+      'contains': '1.03.07'
+    },
+  },
+  'Q04': {
+    'type': 'radio',
+    'title': 'Clickbaitiness',
+    'question': 'Is the headline clickbaity?',
+    'anchored': true,
+    'choices': [
+      '1.04.01:Very much clickbaity',
+      '1.04.02:Somewhat clickbaity',
+      '1.04.03:A little bit clickbaity',
+      '1.04.04:Not at all clickbaity',
+    ]
+  },
+  'Q05': {
+    'type': 'checkbox',
+    'title': 'Clickbaitiness',
+    'prompt': 'Select all that apply',
+    'question': 'What clickbait techniques does this headline employ?',
+    'anchored': true,
+    'requires': {
+      'target': 'Q04',
+      'oneOf': ['1.04.01', '1.04.02', '1.04.03'],
+    },
+    'choices': [
+      '1.05.01:Listicle ("6 Tips on ...")',
+      '1.05.02:Cliffhanger to a story ("You Won\'t Believe What Happens Next")',
+      '1.05.03:Provoking emotions, such as shock or surprise ("...Shocking Result", "...Leave You in Tears")',
+      '1.05.04:Hidden secret or trick ("Fitness Companies Hate Him...", "Experts are Dying to Know Their Secret")',
+      '1.05.05:Challenges to the ego ("Only People with IQ Above 160 Can Solve This")',
+      '1.05.06:Defying convention ("Think Orange Juice is Good for you? Think Again!", "Here are 5 Foods You Never Thought Would Kill You")',
+      '1.05.07:Inducing fear ("Is Your Boyfriend Cheating on You?")',
+      '1.05.08:Other',
+    ],
+  },
+  'Q06': {
+    'type': 'textarea',
+    'title': 'Clickbaitiness',
+    'question': 'Please describe other ways in which the title is clickbaity',
+    'anchored': true,
+    'requires': {
+      'target': 'Q05',
+      'contains': '1.05.08',
+    },
+  },
+  'Q07': {
+    'type': 'radio',
+    'title': 'Single study?',
+    'question': 'Is the article primarily about a single scientific study?',
+    'choices': [
+      '1.07.01:Yes',
+      '1.07.02:No',
+    ],
+    'anchored': false,
+  },
+  'Q08a': {
+    'type': 'radio',
+    'title': 'Types of sources',
+    'question': 'Does the article cite sources?',
+    'choices': [
+      '1.08a.01:Yes',
+      '1.08a.02:No',
+    ],
+    'anchored': false,
+  },
+  'Q08b': {
+    'type': 'checkbox',
+    'title': 'Types of sources',
+    'question': 'Which of the following are cited?',
+    'requires': {
+      'target': 'Q08a',
+      'equal': '1.08a.01',
+    },
+    'choices': [
+      '1.08.01:Experts',
+      '1.08.02:Studies',
+      '1.08.03:Organizations',
+      '1.08.04:Other', 
+    ],
+    'anchored': false,
+  },
+  'Q09_01': {
+    'type': 'highlight',
+    'title': 'Expert sources',
+    'question': 'Highlight expert source',
+    'anchored': true,
+    'newSelectionRequired': true,
+    'requires': {
+      'target': 'Q08b',
+      'contains': '1.08.01',
+    },
+    'repeatable': true,
+  },
+  'Q10_01': {
+    'type': 'highlight',
+    'title': 'Studies',
+    'question': 'Highlight study',
+    'anchored': true,
+    'newSelectionRequired': true,
+    'requires': {
+      'target': 'Q08b',
+      'contains': '1.08.02',
+    },
+    'repeatable': true,
+  },
+  'Q11_01': {
+    'type': 'highlight',
+    'title': 'Organizations',
+    'question': 'Highlight organization',
+    'anchored': true,
+    'newSelectionRequired': true,
+    'requires': {
+      'target': 'Q08b',
+      'contains': '1.08.03',
+    },
+    'repeatable': true
+  },
+  'Q12_01': {
+    'type': 'highlight',
+    'title': 'Other',
+    'question': 'Highlight other source',
+    'anchored': true,
+    'newSelectionRequired': true,
+    'requires': {
+      'target': 'Q08b',
+      'contains': '1.08.04',
+    },
+    'repeatable': true
+  },
+  'Q13': {
+    'type': 'radio',
+    'title': 'Other types of sources',
+    'question': 'Are any experts, organizations, or studies separate from the central study quoted in the article?',
+    'choices': [
+      '1.13.01:Yes',
+      '1.13.02:No',
+    ],
+    'anchored': false,
+  },
+  'Q13_01': {
+    'type': 'highlight',
+    'title': 'Separate types of sources',
+    'question': 'Separate sources',
+    'anchored': true,
+    'newSelectionRequired': true,
+    'requires': {
+      'target': 'Q13',
+      'contains': '1.13.01',
+    },
+    'repeatable': true,
+  },
+  'Q14': {
+    'type': 'radio',
+    'title': 'Confidence in claims made by sources',
+    'question': 'To what extent does the author\'s confidence in claims made by sources seem justified?',
+    'choices': [
+      '1.14.01:Completely justified',
+      '1.14.02:Mostly justified',
+      '1.14.03:Somewhat justified',
+      '1.14.04:Slightly justified',
+      '1.14.05:Not at all justified',
+    ],
+    'anchored': false,
+  },
+  'Q15': {
+    'type': 'radio',
+    'title': 'Acknowledgement of uncertainty',
+    'question': 'Does the author acknowledge uncertainty, or the possibility things might be otherwise?',
+    'choices': [
+      '1.15.01:Yes',
+      '1.15.02:Sort of',
+      '1.15.03:No',
+    ],
+    'anchored': false,
+  },
+  'Q15_01': {
+    'type': 'highlight',
+    'title': 'Acknowledgement of uncertainty',
+    'question': 'Highlight uncertainty example',
+    'anchored': true,
+    'newSelectionRequired': true,
+    'requires': {
+      'target': 'Q15',
+      'oneOf': ['1.15.01', '1.15.02'],
+    },
+    'repeatable': true,
+  },
+  'Q16': {
+    'type': 'radio',
+    'title': 'Emotional valence',
+    'question': 'Is the language extremely negative, extremely positive, or somewhere in the middle?',
+    'anchored': false,
+    'choices': [
+      '1.16.01:Extremely negative',
+      '1.16.02:Somewhat negative',
+      '1.16.03:Neither negative nor positive',
+      '1.16.04:Somewhat positive',
+      '1.16.05:Extremely positive',
+    ],
+  },
+  'Q16_01': {
+    'type': 'highlight',
+    'title': 'Emotional valence',
+    'question': 'Highlight where any language is extremely negative or extremely positive',
+    'anchored': true,
+    'newSelectionRequired': true,
+    'requires': {
+      'target': 'Q16',
+      'oneOf': ['1.16.01', '1.16.02', '1.16.04', '1.16.05'],
+    },
+    'repeatable': true,
+  },
+  'Q17': {
+    'type': 'radio',
+    'title': 'Exaggerated/minimized claims',
+    'question': 'Does the author use exaggerations/minimizations or generally seems to represent situations and events in a proportional manner?',
+    'anchored': false,
+    'choices': [
+      '1.17.01:Yes, there are a mix of exaggerations and minimizations',
+      '1.17.02:Yes, there are exaggerations',
+      '1.17.03:Yes, there are minimizations',
+      '1.17.04:No, the text seems generally proportional (avoids exaggeration and minimization)',
+    ],
+  },
+  'Q17_01': {
+    'type': 'highlight',
+    'title': 'Exaggerated/minimized claims',
+    'question': 'Highlight where the author uses exaggerations/minimizations or seems to represent things in a proportional manner',
+    'anchored': true,
+    'newSelectionRequired': true,
+    'requires': {
+      'target': 'Q17',
+      'oneOf': ['1.17.01', '1.17.02', '1.17.03'],
+    },
+    'repeatable': true,
+  }
+}
